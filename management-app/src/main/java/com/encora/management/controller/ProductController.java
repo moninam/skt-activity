@@ -41,6 +41,7 @@ public class ProductController {
     @PostMapping("/add")
     public RedirectView addProduct(@ModelAttribute("product")Product product, RedirectAttributes redirectAttributes){
         final RedirectView redirectView = new RedirectView("/product/add",true);
+        //TODO: Implement Queue part
         Product savedProduct = productService.addProduct(product);
         redirectAttributes.addFlashAttribute("savedProduct",savedProduct);
         redirectAttributes.addFlashAttribute("successAction",true);
