@@ -15,5 +15,12 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.encora</groupId>
+            <artifactId>commons-library</artifactId>
+            <version>${commons.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
