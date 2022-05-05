@@ -19,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Collection<Product> getProducts() {
-        return productRepository.findAll()
+        return this.productRepository.findAll()
                 .stream()
                 .collect(Collectors.toList());
     }

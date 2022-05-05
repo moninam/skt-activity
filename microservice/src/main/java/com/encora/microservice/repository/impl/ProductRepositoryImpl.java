@@ -20,11 +20,14 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Collection<Product> findAll() {
-        return null;
+        //TODO: Change to read queue implementation
+        return this.products.values();
     }
 
     @Override
     public Product add(Product product) {
-        return null;
+        //TODO:Change to add queue implementation
+        this.products.put(product.getName(),product);
+        return product;
     }
 }

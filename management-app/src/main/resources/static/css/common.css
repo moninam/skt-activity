@@ -9,3 +9,12 @@
     display: inline-block;
     text-align:center;
 }
+.space{
+    padding-bottom: 20px;
+}
+body{
+    padding-left: 10px;
+}
+#messageSuccess{
+    color: darkgreen;
+}

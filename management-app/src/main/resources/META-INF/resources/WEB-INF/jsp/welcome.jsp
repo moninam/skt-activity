@@ -14,10 +14,10 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-4">
-            <button type="button" class="btn btn-primary">LIST OF PRODUCTS</button>
+            <a href="${pageContext.request.contextPath}/product/list" class="btn btn-primary">LIST OF PRODUCTS</a>
         </div>
         <div class="col-4">
-            <button type="button" class="btn btn-primary">ADD PRODUCT</button>
+            <a href="${pageContext.request.contextPath}/product/add" class="btn btn-primary">ADD PRODUCT</a>
         </div>
     </div>
 </div>
