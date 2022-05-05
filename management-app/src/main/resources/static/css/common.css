@@ -1,0 +1,11 @@
+.row{
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+#title{
+    color: aliceblue;
+}
+.center-content{
+    display: inline-block;
+    text-align:center;
+}
