@@ -2,6 +2,8 @@ package com.encora.management.controller;
 
 import com.encora.commons.dto.Product;
 import com.encora.management.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,11 @@ public class ProductController {
     private static final String PRODUCT_LIST = "list-products";
     private static final String ADD_PRODUCT = "new-product";
     private static final String WELCOME = "welcome";
+    @Value("${app.message}")
+    private String message;
     private final ProductService productService;
 
+    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -47,5 +52,13 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("successAction",true);
         return redirectView;
     }
+    /*
+    @GetMapping(value = "test")
+    public String sendMessage() {
+        List<Product> productList = new ArrayList<>(productService.getProducts());
+        MessageList messageList = new MessageList(productList);
+        queueSender.send(messageList);
+        return message;
+    }*/
 
 }

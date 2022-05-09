@@ -15,9 +15,14 @@ public class MessageList implements Serializable {
     private String tag;
     private List<Product> productList;
 
-    private MessageList(){
+    public MessageList(){
         this.tag = UUID.randomUUID().toString();
         productList = new ArrayList<>();
+    }
+    public MessageList(List<Product> list){
+        this.tag = UUID.randomUUID().toString();
+        productList = new ArrayList<>();
+        this.productList.addAll(list);
     }
 
     public void setList(List<Product> products){
