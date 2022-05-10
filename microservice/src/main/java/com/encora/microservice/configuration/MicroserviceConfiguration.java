@@ -3,6 +3,8 @@ package com.encora.microservice.configuration;
 import com.encora.commons.dto.Product;
 import com.encora.microservice.repository.ProductRepository;
 import com.encora.microservice.repository.impl.ProductRepositoryImpl;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
@@ -39,6 +41,12 @@ public class MicroserviceConfiguration {
 
     @Value("${rabbit.rk.response}")
     private String responseRK;
+    @Value("${rabbit.rk.request}")
+    private String requestRK;
+    @Value("${rabbit.rk.stored}")
+    private String storedRK;
+    @Value("${rabbit.rk.reply}")
+    private String replyRK;
     @Bean
     public ProductRepository provideProductRepository(){
         return new ProductRepositoryImpl(initData());
@@ -118,5 +126,23 @@ public class MicroserviceConfiguration {
     @Bean
     public DirectExchange directExchange() {
         return new DirectExchange(productExchange);
+    }
+
+    @Bean
+    public Binding requestBinding(){
+        return BindingBuilder.bind(requestQueue()).to(directExchange()).with(requestRK);
+    }
+
+    @Bean
+    public Binding responseBinding(){
+        return BindingBuilder.bind(responseQueue()).to(directExchange()).with(responseRK);
+    }
+    @Bean
+    public Binding storedBinding(){
+        return BindingBuilder.bind(storedQueue()).to(directExchange()).with(storedRK);
+    }
+    @Bean
+    public Binding replyBinding(){
+        return BindingBuilder.bind(replyQueue()).to(directExchange()).with(replyRK);
     }
 }

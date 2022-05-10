@@ -33,8 +33,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts() {
-        Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), requestRK, "request");
+    public List<Product> getProducts() {Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), requestRK, "request");
         return productSerializer.deserializeList(obj.toString());
     }
 

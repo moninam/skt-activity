@@ -1,6 +1,8 @@
 package com.encora.management.configuration;
 
 import com.encora.commons.serializer.ProductSerializer;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
@@ -35,6 +37,13 @@ public class ManagementConfiguration {
 
     @Value("${rabbit.rk.response}")
     private String responseRK;
+
+    @Value("${rabbit.rk.request}")
+    private String requestRK;
+    @Value("${rabbit.rk.stored}")
+    private String storedRK;
+    @Value("${rabbit.rk.reply}")
+    private String replyRK;
 
     @Bean
     public ProductSerializer productSerializer(){
@@ -106,5 +115,23 @@ public class ManagementConfiguration {
     @Bean
     public DirectExchange directExchange() {
         return new DirectExchange(productExchange);
+    }
+
+    @Bean
+    public Binding requestBinding(){
+        return BindingBuilder.bind(requestQueue()).to(directExchange()).with(requestRK);
+    }
+
+    @Bean
+    public Binding responseBinding(){
+        return BindingBuilder.bind(responseQueue()).to(directExchange()).with(responseRK);
+    }
+    @Bean
+    public Binding storedBinding(){
+        return BindingBuilder.bind(storedQueue()).to(directExchange()).with(storedRK);
+    }
+    @Bean
+    public Binding replyBinding(){
+        return BindingBuilder.bind(replyQueue()).to(directExchange()).with(replyRK);
     }
 }
