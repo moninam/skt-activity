@@ -8,6 +8,21 @@
     <link href="${pageContext.request.contextPath}/css/common.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<c:if test="${errorOccurred}">
+    <div class="container">
+        <h1>An Error has ocurred</h1>
+        <ul class="list-group">
+            <c:forEach var="error" items="${errors}">
+                <li class="list-group-item list-group-item-warning">T
+                    <div class="alert alert-danger">
+                        <strong><c:out value="${error}"/>
+                    </div>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
+</c:if>
+<c:if test="${!errorOccurred}">
 <h1>List of products</h1>
 <table class="table">
     <thead>
@@ -27,6 +42,7 @@
     </c:forEach>
     </tbody>
 </table>
+</c:if>
 <br>
 <a href="/product">Return home</a>
 </body>

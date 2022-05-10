@@ -3,16 +3,21 @@ package com.encora.management.controller;
 import com.encora.commons.constants.Routes;
 import com.encora.commons.constants.ViewNames;
 import com.encora.commons.dto.Product;
+import com.encora.management.exception.OperationErrorException;
 import com.encora.management.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/product")
@@ -30,8 +35,17 @@ public class ProductController {
     @GetMapping("/list")
     public String viewProducts(Model model){
         //TODO: Make Logic to load from queue
-        model.addAttribute(ViewNames.PRODUCT_ATTR.getName(),productService.getProducts());
-        return ViewNames.PRODUCT_LIST.getName();
+        try{
+            model.addAttribute(ViewNames.PRODUCT_ATTR.getName(),productService.getProducts());
+            return ViewNames.PRODUCT_LIST.getName();
+        }catch (OperationErrorException exc){
+            List<String> errors = new ArrayList<>();
+            errors.add(exc.getMessage());
+            model.addAttribute(ViewNames.ERROR_ATTR.getName(),errors);
+            model.addAttribute(ViewNames.ERROR_HAPPENED.getName(),true);
+            return ViewNames.PRODUCT_LIST.getName();
+        }
+
     }
     @GetMapping("/add")
     public String addProductView(Model model){
@@ -39,8 +53,15 @@ public class ProductController {
         return ViewNames.ADD_PRODUCT.getName();
     }
     @PostMapping("/add")
-    public RedirectView addProduct(@ModelAttribute("product")Product product, RedirectAttributes redirectAttributes){
+    public RedirectView addProduct(@ModelAttribute("product")Product product, RedirectAttributes redirectAttributes,
+    BindingResult bindingResult){
         final RedirectView redirectView = new RedirectView(Routes.ADD_ROUTE.getName(),true);
+
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addAttribute(ViewNames.ERROR_ATTR.getName(),bindingResult.getAllErrors());
+            redirectAttributes.addAttribute(ViewNames.ERROR_HAPPENED.getName(),true);
+            return redirectView;
+        }
         //TODO: Implement Queue part
         Product savedProduct = productService.addProduct(product);
         redirectAttributes.addFlashAttribute(ViewNames.SAVED_PRODUCT_ATTR.getName(),savedProduct);

@@ -1,7 +1,9 @@
 package com.encora.management.service.impl;
 
+import com.encora.commons.constants.ErrorConstants;
 import com.encora.commons.dto.Product;
 import com.encora.commons.serializer.ProductSerializer;
+import com.encora.management.exception.OperationErrorException;
 import com.encora.management.service.ProductService;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -33,7 +35,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts() {Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), requestRK, "request");
+    public List<Product> getProducts() throws OperationErrorException {
+        Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), requestRK, "request");
+        if(obj == null)
+        {
+            throw new OperationErrorException(ErrorConstants.ERROR_OPERATION);
+        }
         return productSerializer.deserializeList(obj.toString());
     }
 
