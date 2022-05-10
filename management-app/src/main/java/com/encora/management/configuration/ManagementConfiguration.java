@@ -1,8 +1,6 @@
-package com.encora.microservice.configuration;
+package com.encora.management.configuration;
 
-import com.encora.commons.dto.Product;
-import com.encora.microservice.repository.ProductRepository;
-import com.encora.microservice.repository.impl.ProductRepositoryImpl;
+import com.encora.commons.serializer.ProductSerializer;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
@@ -18,14 +16,12 @@ import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @Configuration
 @EnableRabbit
-public class MicroserviceConfiguration {
+public class ManagementConfiguration {
     @Value("${rabbit.product.exchange}")
     private String productExchange;
     @Value("${rabbit.product.request.queue}")
@@ -33,31 +29,23 @@ public class MicroserviceConfiguration {
     @Value("${rabbit.product.response.queue}")
     private String responseProductQueue;
     @Value("${rabbit.product.stored.queue}")
-    private String storedProductQueue;
+    private String storedProductsQueue;
     @Value("${rabbit.product.reply.queue}")
     private String replyProductQueue;
 
     @Value("${rabbit.rk.response}")
     private String responseRK;
+
     @Bean
-    public ProductRepository provideProductRepository(){
-        return new ProductRepositoryImpl(initData());
+    public ProductSerializer productSerializer(){
+        return new ProductSerializer();
     }
-    private static Map<String, Product> initData(){
-        Map<String,Product> initData = new HashMap<>();
-        initData.put("Product1",new Product(1,"Product 1","Food"));
-        initData.put("Product2",new Product(2,"Product 2","Food"));
-        initData.put("Product3",new Product(3,"Product 3","Food"));
-
-        return initData;
-    }
-
     @Bean
     public Executor executor(){
         return Executors.newCachedThreadPool();
     }
     @Bean
-    public SimpleRabbitListenerContainerFactory listenerContainer(ConnectionFactory connectionFactory,
+    public SimpleRabbitListenerContainerFactory listenerContainer (ConnectionFactory connectionFactory,
                                                                   SimpleRabbitListenerContainerFactoryConfigurer configurer) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setTaskExecutor(executor());
@@ -88,7 +76,7 @@ public class MicroserviceConfiguration {
 
     @Bean
     public Queue storedQueue() {
-        return new Queue(storedProductQueue);
+        return new Queue(storedProductsQueue);
     }
 
     @Bean
@@ -98,7 +86,7 @@ public class MicroserviceConfiguration {
 
 
     @Bean
-    public SimpleMessageListenerContainer replyListenerContainer(ConnectionFactory connectionFactory) {
+    public SimpleMessageListenerContainer replyMessageContainer(ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         simpleMessageListenerContainer.setQueues(replyQueue());
         simpleMessageListenerContainer.setTaskExecutor(executor());
@@ -110,7 +98,7 @@ public class MicroserviceConfiguration {
     public AsyncRabbitTemplate asyncRabbitTemplate(ConnectionFactory connectionFactory) {
 
         AsyncRabbitTemplate asyncRabbitTemplate = new AsyncRabbitTemplate(rabbitTemplate(connectionFactory),
-                replyListenerContainer(connectionFactory),
+                replyMessageContainer(connectionFactory),
                 productExchange + "/" + responseRK);
         return asyncRabbitTemplate;
     }

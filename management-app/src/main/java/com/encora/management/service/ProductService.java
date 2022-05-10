@@ -3,8 +3,9 @@ package com.encora.management.service;
 import com.encora.commons.dto.Product;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ProductService {
-    Collection<Product> getProducts();
+    List<Product> getProducts();
     Product addProduct(Product product);
 }

@@ -20,7 +20,6 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -48,13 +47,5 @@ public class ProductController {
         redirectAttributes.addFlashAttribute(ViewNames.SUCCESS_ACTION_ATTR.getName(),true);
         return redirectView;
     }
-    /*
-    @GetMapping(value = "test")
-    public String sendMessage() {
-        List<Product> productList = new ArrayList<>(productService.getProducts());
-        MessageList messageList = new MessageList(productList);
-        queueSender.send(messageList);
-        return message;
-    }*/
 
 }

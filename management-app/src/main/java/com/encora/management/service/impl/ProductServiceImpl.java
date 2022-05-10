@@ -1,27 +1,46 @@
 package com.encora.management.service.impl;
 
 import com.encora.commons.dto.Product;
+import com.encora.commons.serializer.ProductSerializer;
 import com.encora.management.service.ProductService;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
+
 //TODO: Implement operations to load and store message to queue
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    @Value("${rabbit.rk.stored}")
+    private String storedRK;
 
-    public ProductServiceImpl() {
+    @Value("${rabbit.rk.request}")
+    private String requestRK;
+
+    private RabbitTemplate rabbitTemplate;
+
+    private ProductSerializer productSerializer;
+
+    private DirectExchange directExchange;
+
+    public ProductServiceImpl(ProductSerializer productSerializer,RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
+        this.productSerializer = productSerializer;
+        this.rabbitTemplate = rabbitTemplate;
+        this.directExchange = directExchange;
     }
 
     @Override
-    public Collection<Product> getProducts() {
-        return new ArrayList<>();
+    public List<Product> getProducts() {
+        Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), requestRK, "request");
+        return productSerializer.deserializeList(obj.toString());
     }
 
     @Override
     public Product addProduct(Product product) {
-        //TODO: Implement logic to send to the queue
-        return null;
+        Object o = rabbitTemplate.convertSendAndReceive(directExchange.getName(), storedRK, productSerializer.serializeObject(product));
+        return productSerializer.deserialize(o.toString());
     }
 }

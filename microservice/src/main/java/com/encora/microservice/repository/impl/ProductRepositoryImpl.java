@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProductRepositoryImpl implements ProductRepository {
-    //TODO: DELETE THIS PART WHEN IMPLEMENTS STORED PROCEDURES
+    //TODO: Change to load with stored procedures
     private final Map<String,Product> products;
 
     public ProductRepositoryImpl(Map<String, Product> products) {
@@ -20,13 +20,11 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Collection<Product> findAll() {
-        //TODO: Change to read queue implementation
         return this.products.values();
     }
 
     @Override
     public Product add(Product product) {
-        //TODO:Change to add queue implementation
         this.products.put(product.getName(),product);
         return product;
     }
