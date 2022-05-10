@@ -1,6 +1,8 @@
-package com.encora.management.configuration;
+package com.encora.microservice.configuration;
 
-import com.encora.commons.serializer.ProductSerializer;
+import com.encora.commons.dto.Product;
+import com.encora.microservice.repository.ProductRepository;
+import com.encora.microservice.repository.impl.ProductRepositoryImpl;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -18,12 +20,14 @@ import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @Configuration
 @EnableRabbit
-public class ManagementConfiguration {
+public class MicroserviceConfiguration {
     @Value("${rabbit.product.exchange}")
     private String productExchange;
     @Value("${rabbit.product.request.queue}")
@@ -31,30 +35,37 @@ public class ManagementConfiguration {
     @Value("${rabbit.product.response.queue}")
     private String responseProductQueue;
     @Value("${rabbit.product.stored.queue}")
-    private String storedProductsQueue;
+    private String storedProductQueue;
     @Value("${rabbit.product.reply.queue}")
     private String replyProductQueue;
 
     @Value("${rabbit.rk.response}")
     private String responseRK;
-
     @Value("${rabbit.rk.request}")
     private String requestRK;
     @Value("${rabbit.rk.stored}")
     private String storedRK;
     @Value("${rabbit.rk.reply}")
     private String replyRK;
-
     @Bean
-    public ProductSerializer productSerializer(){
-        return new ProductSerializer();
+    public ProductRepository provideProductRepository(){
+        return new ProductRepositoryImpl(initData());
     }
+    private static Map<String, Product> initData(){
+        Map<String,Product> initData = new HashMap<>();
+        initData.put("Product1",new Product(1,"Product 1","Food"));
+        initData.put("Product2",new Product(2,"Product 2","Food"));
+        initData.put("Product3",new Product(3,"Product 3","Food"));
+
+        return initData;
+    }
+
     @Bean
     public Executor executor(){
         return Executors.newCachedThreadPool();
     }
     @Bean
-    public SimpleRabbitListenerContainerFactory listenerContainer (ConnectionFactory connectionFactory,
+    public SimpleRabbitListenerContainerFactory listenerContainer(ConnectionFactory connectionFactory,
                                                                   SimpleRabbitListenerContainerFactoryConfigurer configurer) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setTaskExecutor(executor());
@@ -85,7 +96,7 @@ public class ManagementConfiguration {
 
     @Bean
     public Queue storedQueue() {
-        return new Queue(storedProductsQueue);
+        return new Queue(storedProductQueue);
     }
 
     @Bean
@@ -95,7 +106,7 @@ public class ManagementConfiguration {
 
 
     @Bean
-    public SimpleMessageListenerContainer replyMessageContainer(ConnectionFactory connectionFactory) {
+    public SimpleMessageListenerContainer replyListenerContainer(ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         simpleMessageListenerContainer.setQueues(replyQueue());
         simpleMessageListenerContainer.setTaskExecutor(executor());
@@ -107,7 +118,7 @@ public class ManagementConfiguration {
     public AsyncRabbitTemplate asyncRabbitTemplate(ConnectionFactory connectionFactory) {
 
         AsyncRabbitTemplate asyncRabbitTemplate = new AsyncRabbitTemplate(rabbitTemplate(connectionFactory),
-                replyMessageContainer(connectionFactory),
+                replyListenerContainer(connectionFactory),
                 productExchange + "/" + responseRK);
         return asyncRabbitTemplate;
     }

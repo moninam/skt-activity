@@ -1,32 +1,52 @@
 package com.encora.management.service.impl;
 
+import com.encora.commons.constants.ErrorConstants;
 import com.encora.commons.dto.Product;
+import com.encora.commons.serializer.ProductSerializer;
+import com.encora.management.exception.OperationErrorException;
 import com.encora.management.service.ProductService;
-import com.encora.microservice.repository.ProductRepository;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
+
 //TODO: Implement operations to load and store message to queue
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    @Value("${rabbit.rk.stored}")
+    private String storedRK;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    @Value("${rabbit.rk.request}")
+    private String requestRK;
+
+    private RabbitTemplate rabbitTemplate;
+
+    private ProductSerializer productSerializer;
+
+    private DirectExchange directExchange;
+
+    public ProductServiceImpl(ProductSerializer productSerializer,RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
+        this.productSerializer = productSerializer;
+        this.rabbitTemplate = rabbitTemplate;
+        this.directExchange = directExchange;
     }
 
     @Override
-    public Collection<Product> getProducts() {
-        return this.productRepository.findAll()
-                .stream()
-                .collect(Collectors.toList());
+    public List<Product> getProducts() throws OperationErrorException {
+        Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), requestRK, "request");
+        if(obj == null)
+        {
+            throw new OperationErrorException(ErrorConstants.ERROR_OPERATION);
+        }
+        return productSerializer.deserializeList(obj.toString());
     }
 
     @Override
     public Product addProduct(Product product) {
-        final Product savedProduct = productRepository.add(product);
-        return savedProduct;
+        Object o = rabbitTemplate.convertSendAndReceive(directExchange.getName(), storedRK, productSerializer.serializeObject(product));
+        return productSerializer.deserialize(o.toString());
     }
 }
