@@ -53,9 +53,9 @@ public class MicroserviceConfiguration {
     }
     private static Map<String, Product> initData(){
         Map<String,Product> initData = new HashMap<>();
-        initData.put("Product1",new Product(1,"Product 1","Food"));
-        initData.put("Product2",new Product(2,"Product 2","Food"));
-        initData.put("Product3",new Product(3,"Product 3","Food"));
+        initData.put("Product1",new Product(1,"Product 1","Food","D1"));
+        initData.put("Product2",new Product(2,"Product 2","Food","D1"));
+        initData.put("Product3",new Product(3,"Product 3","Food","D1"));
 
         return initData;
     }

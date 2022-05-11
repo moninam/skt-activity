@@ -26,6 +26,11 @@
         <form:input path="type" type="text" class="form-control" id="typeProduct" placeholder="Type"/>
     </div>
     <br>
+    <div class="form-group">
+        <form:label path="description" for="descriptionProduct">Type</form:label>
+        <form:input path="description" type="text" class="form-control" id="descriptionProduct" placeholder="Description"/>
+    </div>
+    <br>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form:form>
 <br>
