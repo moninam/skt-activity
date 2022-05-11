@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ProductService {
     List<Product> getProducts() throws OperationErrorException;
-    Product addProduct(Product product);
+    Product addProduct(Product product) throws OperationErrorException;
 }

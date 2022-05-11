@@ -23,12 +23,6 @@
             <artifactId>commons-library</artifactId>
             <version>${commons.version}</version>
         </dependency>
-        <!-- QUITAR DEPENDENCIA AL OTRO MODULO -->
-        <dependency>
-            <groupId>com.encora</groupId>
-            <artifactId>microservice</artifactId>
-            <version>${commons.version}</version>
-        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>

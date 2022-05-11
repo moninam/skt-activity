@@ -1,7 +1,7 @@
 package com.encora.microservice.service.impl;
 
 import com.encora.commons.dto.Product;
-import com.encora.microservice.repository.ProductRepository;
+import com.encora.microservice.repository.ProductDAO;
 import com.encora.microservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,17 +13,17 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    public ProductRepository productRepository;
+    public ProductDAO productDAO;
 
     @Override
     public List<Product> getProducts() {
 
-        return new ArrayList<>(productRepository.findAll());
+        return new ArrayList<>(productDAO.findAll());
     }
 
     @Override
     public Product saveProduct(Product product) {
-        productRepository.add(product);
+        productDAO.add(product);
         return product;
     }
 }
