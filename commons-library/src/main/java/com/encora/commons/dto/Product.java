@@ -1,16 +1,18 @@
 package com.encora.commons.dto;
 
+import com.encora.commons.enums.ProductType;
+
 public class Product {
     private Integer id;
     private String name;
-    private String type;
+    private ProductType type;
 
     private String description;
 
     public Product() {
     }
 
-    public Product(Integer id, String name, String type,String description) {
+    public Product(Integer id, String name, ProductType type,String description) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -33,11 +35,11 @@ public class Product {
         this.name = name;
     }
 
-    public String getType() {
+    public ProductType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ProductType type) {
         this.type = type;
     }
 

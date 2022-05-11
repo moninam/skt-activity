@@ -4,7 +4,7 @@ import com.encora.commons.dto.Product;
 
 import java.util.Collection;
 
-public interface ProductRepository {
+public interface ProductDAO {
     Collection<Product> findAll();
     Product add(Product product);
 }

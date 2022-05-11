@@ -3,6 +3,7 @@ package com.encora.management.controller;
 import com.encora.commons.constants.Routes;
 import com.encora.commons.constants.ViewNames;
 import com.encora.commons.dto.Product;
+import com.encora.commons.enums.ProductType;
 import com.encora.management.exception.OperationErrorException;
 import com.encora.management.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -49,6 +51,9 @@ public class ProductController {
     }
     @GetMapping("/add")
     public String addProductView(Model model){
+        List<ProductType> enumsValues = Arrays.asList(ProductType.values());
+
+        model.addAttribute(ViewNames.TYPE_ATTR.getName(),enumsValues);
         model.addAttribute(ViewNames.PRODUCT_ATTR.getName(), new Product());
         return ViewNames.ADD_PRODUCT.getName();
     }
@@ -63,9 +68,14 @@ public class ProductController {
             return redirectView;
         }
         //TODO: Implement Queue part
-        Product savedProduct = productService.addProduct(product);
-        redirectAttributes.addFlashAttribute(ViewNames.SAVED_PRODUCT_ATTR.getName(),savedProduct);
-        redirectAttributes.addFlashAttribute(ViewNames.SUCCESS_ACTION_ATTR.getName(),true);
+        try{
+            Product savedProduct = productService.addProduct(product);
+            redirectAttributes.addFlashAttribute(ViewNames.SAVED_PRODUCT_ATTR.getName(),savedProduct);
+            redirectAttributes.addFlashAttribute(ViewNames.SUCCESS_ACTION_ATTR.getName(),true);
+        }catch (OperationErrorException e){
+            redirectAttributes.addFlashAttribute(ViewNames.ERROR_ACTION_ATTR.getName(),true);
+        }
+
         return redirectView;
     }
 

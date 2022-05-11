@@ -1,8 +1,9 @@
 package com.encora.microservice.configuration;
 
 import com.encora.commons.dto.Product;
-import com.encora.microservice.repository.ProductRepository;
-import com.encora.microservice.repository.impl.ProductRepositoryImpl;
+import com.encora.commons.enums.ProductType;
+import com.encora.microservice.repository.ProductDAO;
+import com.encora.microservice.repository.impl.ProductDAOImpl;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -48,14 +49,14 @@ public class MicroserviceConfiguration {
     @Value("${rabbit.rk.reply}")
     private String replyRK;
     @Bean
-    public ProductRepository provideProductRepository(){
-        return new ProductRepositoryImpl(initData());
+    public ProductDAO provideProductRepository(){
+        return new ProductDAOImpl(initData());
     }
     private static Map<String, Product> initData(){
         Map<String,Product> initData = new HashMap<>();
-        initData.put("Product1",new Product(1,"Product 1","Food","D1"));
-        initData.put("Product2",new Product(2,"Product 2","Food","D1"));
-        initData.put("Product3",new Product(3,"Product 3","Food","D1"));
+        initData.put("Product1",new Product(1,"Product 1", ProductType.FOOD,"D1"));
+        initData.put("Product2",new Product(2,"Product 2",ProductType.FOOD,"D1"));
+        initData.put("Product3",new Product(3,"Product 3",ProductType.FOOD,"D1"));
 
         return initData;
     }

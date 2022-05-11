@@ -2,6 +2,7 @@ package com.encora.microservice;
 
 import com.encora.commons.serializer.ProductSerializer;
 import com.encora.microservice.listener.QueueListener;
+import com.encora.microservice.repository.mapper.ProductMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,11 @@ public class MicroserviceApplication {
     @Bean
     public ProductSerializer serializer() {
         return new ProductSerializer();
+    }
+
+    @Bean
+    public ProductMapper productMapper(){
+        return new ProductMapper();
     }
 
 }

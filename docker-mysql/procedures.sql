@@ -19,9 +19,11 @@ CREATE PROCEDURE `insertProduct`
 (
     IN name_param VARCHAR(50),
     IN type_param VARCHAR(50),
-    IN description_param VARCHAR(250)
+    IN description_param VARCHAR(250),
+    OUT id_param INT
 )
 BEGIN
 	INSERT INTO products(product_name,product_type,product_description) VALUES(name_param,type_param,description_param);
+    SET id_param := last_insert_id();
 END $$
 DELIMITER ;

@@ -45,8 +45,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(Product product) {
+    public Product addProduct(Product product) throws OperationErrorException {
         Object o = rabbitTemplate.convertSendAndReceive(directExchange.getName(), storedRK, productSerializer.serializeObject(product));
-        return productSerializer.deserialize(o.toString());
+        if(o == null){
+            throw new OperationErrorException(ErrorConstants.ERROR_ADD);
+        }
+        Product result = productSerializer.deserialize(o.toString());
+
+        if(result.getId() == 0){
+            throw new OperationErrorException(ErrorConstants.ERROR_ADD);
+        }
+        return result;
     }
 }
