@@ -26,6 +26,10 @@ public class ProductSerializer {
         return product;
     }
     public String serializeObject(Product product) {
+        if(product == null){
+            return null;
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(product);
