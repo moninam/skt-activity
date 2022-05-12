@@ -2,7 +2,6 @@ package com.encora.microservice.repository.impl;
 
 import com.encora.commons.constants.ProceduresNames;
 import com.encora.commons.dto.Product;
-import com.encora.microservice.listener.QueueListener;
 import com.encora.microservice.repository.ProductDAO;
 import com.encora.microservice.repository.mapper.ProductMapper;
 import org.slf4j.Logger;
@@ -22,12 +21,9 @@ public class ProductDAOImpl implements ProductDAO {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ProductMapper productMapper;
-    private final Map<String,Product> products;
 
 
-    public ProductDAOImpl(Map<String, Product> products) {
-        this.products = new HashMap<>();
-        this.products.putAll(products);
+    public ProductDAOImpl() {
     }
 
     @Override
@@ -54,8 +50,6 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Product add(Product product) {
         try{
-            Map<String,?> paramValues = new HashMap<>();
-
             SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                     .withProcedureName(ProceduresNames.ADD_PRODUCT);
             MapSqlParameterSource parameters = new MapSqlParameterSource();

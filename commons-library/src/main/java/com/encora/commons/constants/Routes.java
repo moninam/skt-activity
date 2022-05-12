@@ -1,8 +1,7 @@
 package com.encora.commons.constants;
 
 public enum Routes {
-    ADD_ROUTE("/product/add"),
-    ERROR_ROUTE("/product/error");
+    ADD_ROUTE("/product/add");
     private String name;
 
     Routes(String name) {

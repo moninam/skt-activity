@@ -6,7 +6,6 @@ import com.encora.commons.dto.Product;
 import com.encora.commons.enums.ProductType;
 import com.encora.management.exception.OperationErrorException;
 import com.encora.management.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,7 +66,7 @@ public class ProductController {
             redirectAttributes.addAttribute(ViewNames.ERROR_HAPPENED.getName(),true);
             return redirectView;
         }
-        //TODO: Implement Queue part
+
         try{
             Product savedProduct = productService.addProduct(product);
             redirectAttributes.addFlashAttribute(ViewNames.SAVED_PRODUCT_ATTR.getName(),savedProduct);

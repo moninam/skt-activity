@@ -1,7 +1,5 @@
 package com.encora.microservice.configuration;
 
-import com.encora.commons.dto.Product;
-import com.encora.commons.enums.ProductType;
 import com.encora.microservice.repository.ProductDAO;
 import com.encora.microservice.repository.impl.ProductDAOImpl;
 import org.springframework.amqp.core.Binding;
@@ -21,8 +19,6 @@ import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -50,15 +46,7 @@ public class MicroserviceConfiguration {
     private String replyRK;
     @Bean
     public ProductDAO provideProductRepository(){
-        return new ProductDAOImpl(initData());
-    }
-    private static Map<String, Product> initData(){
-        Map<String,Product> initData = new HashMap<>();
-        initData.put("Product1",new Product(1,"Product 1", ProductType.FOOD,"D1"));
-        initData.put("Product2",new Product(2,"Product 2",ProductType.FOOD,"D1"));
-        initData.put("Product3",new Product(3,"Product 3",ProductType.FOOD,"D1"));
-
-        return initData;
+        return new ProductDAOImpl();
     }
 
     @Bean

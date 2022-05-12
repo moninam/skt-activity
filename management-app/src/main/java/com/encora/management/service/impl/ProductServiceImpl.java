@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//TODO: Implement operations to load and store message to queue
 @Service
 public class ProductServiceImpl implements ProductService {
 
