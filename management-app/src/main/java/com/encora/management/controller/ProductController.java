@@ -35,7 +35,6 @@ public class ProductController {
     }
     @GetMapping("/list")
     public String viewProducts(Model model){
-        //TODO: Make Logic to load from queue
         try{
             model.addAttribute(ViewNames.PRODUCT_ATTR.getName(),productService.getProducts());
             return ViewNames.PRODUCT_LIST.getName();

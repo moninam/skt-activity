@@ -26,9 +26,9 @@ public class QueueListener {
 
     @RabbitHandler
     @RabbitListener(queues = "${rabbit.product.stored.queue}")
-    public String subscribeTostoreQueue(String productMessage, Message message) {
+    public String listenQueueStored(String productMessage, Message message) {
 
         LOGGER.debug("Product received  {}", productMessage);
-        return productSerializer.serializeObject(this.productService.saveProduct(productSerializer.deserialize(productMessage)));
+        return productSerializer.serializeObject(this.productService.saveProduct(productSerializer.deserializeObject(productMessage)));
     }
 }

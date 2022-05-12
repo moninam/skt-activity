@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
         if(o == null){
             throw new OperationErrorException(ErrorConstants.ERROR_ADD);
         }
-        Product result = productSerializer.deserialize(o.toString());
+        Product result = productSerializer.deserializeObject(o.toString());
 
         if(result.getId() == 0){
             throw new OperationErrorException(ErrorConstants.ERROR_ADD);
