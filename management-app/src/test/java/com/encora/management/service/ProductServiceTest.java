@@ -69,7 +69,7 @@ public class ProductServiceTest {
                 "\"description\":\"Chips\"" +
                 "}]";
         jsonProduct = "{\"id\":6,\"name\":\"Coca Cola\",\"type\":\"FOOD\",\"description\":\"Coca Cola\"}";
-        jsonProduct = "{\"id\":0,\"name\":\"Coca Cola\",\"type\":\"FOOD\",\"description\":\"Coca Cola\"}";
+        jsonProductError = "{\"id\":0,\"name\":\"Coca Cola\",\"type\":\"FOOD\",\"description\":\"Coca Cola\"}";
         productTest = new Product(6,"Coca Cola",ProductType.FOOD,"Coca Cola");
         productTestError = new Product(0,"Coca Cola",ProductType.FOOD,"Coca Cola");
         productList.add(new Product(1,"Samsung", ProductType.CELL_PHONE,"Samsung"));
@@ -121,7 +121,6 @@ public class ProductServiceTest {
         when(directExchange.getName()).thenReturn(QueueConstants.exchangeName);
     }
     @Test
-
     public void testGetProduct(){
         List<Product> products = new ArrayList<>();
         try{
