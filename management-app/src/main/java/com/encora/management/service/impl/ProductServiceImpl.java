@@ -1,6 +1,7 @@
 package com.encora.management.service.impl;
 
 import com.encora.commons.constants.ErrorConstants;
+import com.encora.commons.constants.QueueConstants;
 import com.encora.commons.dto.Product;
 import com.encora.commons.serializer.ProductSerializer;
 import com.encora.management.exception.OperationErrorException;
@@ -12,15 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//TODO: Implement operations to load and store message to queue
 @Service
 public class ProductServiceImpl implements ProductService {
-
-    @Value("${rabbit.rk.stored}")
-    private String storedRK;
-
-    @Value("${rabbit.rk.request}")
-    private String requestRK;
 
     private RabbitTemplate rabbitTemplate;
 
@@ -36,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProducts() throws OperationErrorException {
-        Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), requestRK, "request");
+        Object obj = rabbitTemplate.convertSendAndReceive(directExchange.getName(), QueueConstants.requestRK, QueueConstants.messageQueue);
         if(obj == null)
         {
             throw new OperationErrorException(ErrorConstants.ERROR_OPERATION);
@@ -46,11 +40,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) throws OperationErrorException {
-        Object o = rabbitTemplate.convertSendAndReceive(directExchange.getName(), storedRK, productSerializer.serializeObject(product));
+        Object o = rabbitTemplate.convertSendAndReceive(directExchange.getName(), QueueConstants.storedRK, productSerializer.serializeObject(product));
         if(o == null){
             throw new OperationErrorException(ErrorConstants.ERROR_ADD);
         }
-        Product result = productSerializer.deserialize(o.toString());
+        Product result = productSerializer.deserializeObject(o.toString());
 
         if(result.getId() == 0){
             throw new OperationErrorException(ErrorConstants.ERROR_ADD);

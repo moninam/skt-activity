@@ -8,7 +8,6 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.Payload;
 
 public class QueueListener {
     private final static Logger LOGGER = LoggerFactory.getLogger(QueueListener.class);
@@ -27,9 +26,9 @@ public class QueueListener {
 
     @RabbitHandler
     @RabbitListener(queues = "${rabbit.product.stored.queue}")
-    public String subscribeTostoreQueue(String productMessage, Message message) {
+    public String listenQueueStored(String productMessage, Message message) {
 
         LOGGER.debug("Product received  {}", productMessage);
-        return productSerializer.serializeObject(this.productService.saveProduct(productSerializer.deserialize(productMessage)));
+        return productSerializer.serializeObject(this.productService.saveProduct(productSerializer.deserializeObject(productMessage)));
     }
 }

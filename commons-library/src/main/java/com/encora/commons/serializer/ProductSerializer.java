@@ -14,7 +14,7 @@ import java.util.List;
 public class ProductSerializer {
     private final static Logger LOGGER = LoggerFactory.getLogger(ProductSerializer.class);
 
-    public Product deserialize(String json) {
+    public Product deserializeObject(String json) {
         ObjectMapper mapper = new ObjectMapper();
         Product product = null;
         try {
@@ -26,6 +26,10 @@ public class ProductSerializer {
         return product;
     }
     public String serializeObject(Product product) {
+        if(product == null){
+            return null;
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(product);

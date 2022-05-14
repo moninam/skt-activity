@@ -23,7 +23,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product saveProduct(Product product) {
-        productDAO.add(product);
-        return product;
+        Product productResponse = productDAO.add(product);
+        return productResponse;
+    }
+    public void setProductDAO(ProductDAO productDAO){
+        this.productDAO = productDAO;
     }
 }
