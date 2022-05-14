@@ -41,7 +41,7 @@ public class ProductController {
         }catch (OperationErrorException exc){
             List<String> errors = new ArrayList<>();
             errors.add(exc.getMessage());
-            model.addAttribute(ViewNames.ERROR_ATTR.getName(),errors);
+                model.addAttribute(ViewNames.ERROR_ATTR.getName(),errors);
             model.addAttribute(ViewNames.ERROR_HAPPENED.getName(),true);
             return ViewNames.PRODUCT_LIST.getName();
         }
