@@ -1,0 +1,40 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq_container'
+    ports:
+        - 5600:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_go_net
+  
+  mysqldb:
+    platform: linux/x86_64
+    image: mysql:8.0
+    restart: always
+    container_name: db_sql
+    environment:
+      MYSQL_DATABASE: 'skt_activity'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - "4000:3306"
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - "./my-db:/var/lib/mysql"
+      - "./procedures.sql:/docker-entrypoint-initdb.d/init.sql"
+# Names our volume
+volumes:
+  my-db:
+  
+networks:
+  rabbitmq_go_net:
+    driver: bridge

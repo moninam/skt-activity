@@ -1,6 +1,7 @@
 HELP.md
 target/
 docker-mysql/my-db
+docker-containers/my-db
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

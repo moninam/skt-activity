@@ -90,7 +90,7 @@ public class ProductDAOImpl implements ProductDAO {
             LOGGER.error(e.getMessage());
             product.setId(0);
         }
-
+        callAddProduct = null;
         return product;
     }
     public void setCallListProduct(SimpleJdbcCall call){
