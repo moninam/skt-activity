@@ -6,13 +6,12 @@ import com.encora.commons.dto.Product;
 import com.encora.commons.enums.ProductType;
 import com.encora.management.exception.OperationErrorException;
 import com.encora.management.service.ProductService;
+import org.apache.coyote.http2.ConnectionException;
+import org.springframework.amqp.AmqpConnectException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -46,6 +45,10 @@ public class ProductController {
             return ViewNames.PRODUCT_LIST.getName();
         }
 
+    }
+    @ExceptionHandler({ConnectionException.class, AmqpConnectException.class})
+    public String handleException() {
+        return ViewNames.ERROR_VIEW.getName();
     }
     @GetMapping("/add")
     public String addProductView(Model model){

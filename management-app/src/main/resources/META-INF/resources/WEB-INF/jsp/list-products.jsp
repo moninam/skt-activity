@@ -13,7 +13,7 @@
         <h1>An Error has ocurred</h1>
         <ul class="list-group">
             <c:forEach var="error" items="${errors}">
-                <li class="list-group-item list-group-item-warning">T
+                <li class="list-group-item list-group-item-warning">
                     <div class="alert alert-danger">
                         <strong><c:out value="${error}"/>
                     </div>

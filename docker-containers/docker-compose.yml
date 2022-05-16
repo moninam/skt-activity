@@ -1,10 +1,22 @@
-version: '3.3'
+version: "3.2"
 services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq_container'
+    ports:
+        - 5600:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_go_net
+  
   mysqldb:
     platform: linux/x86_64
-    image: mysql:5.7
+    image: mysql:8.0
     restart: always
-    container_name: skt_db_image
+    container_name: db_sql
     environment:
       MYSQL_DATABASE: 'skt_activity'
       # Password for root access
@@ -22,3 +34,7 @@ services:
 # Names our volume
 volumes:
   my-db:
+  
+networks:
+  rabbitmq_go_net:
+    driver: bridge

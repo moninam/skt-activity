@@ -5,7 +5,7 @@ public enum ViewNames {
 
     TYPE_ATTR("productType"),
     PRODUCT_LIST("list-products"),
-    ERROR_VIEW("error"),
+    ERROR_VIEW("error-view"),
     ADD_PRODUCT("new-product"),
     WELCOME("welcome"),
 
